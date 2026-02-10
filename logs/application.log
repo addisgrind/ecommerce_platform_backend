@@ -1,0 +1,21 @@
+2026-02-10T07:18:22.114Z INFO  [order-service] [traceId=2f9c9a4f3e5743c4] [userId=usr_104882] [ip=203.0.113.42] Received checkout request orderId=ord_7894201 cartId=crt_441992
+2026-02-10T07:18:22.389Z INFO  [payment-service] [traceId=2f9c9a4f3e5743c4] [userId=usr_104882] [ip=203.0.113.42] Authorizing payment provider=stripe amount=249.97 currency=USD
+2026-02-10T07:18:23.041Z ERROR [payment-service] [traceId=2f9c9a4f3e5743c4] [userId=usr_104882] [ip=203.0.113.42] Payment authorization failed gatewayTimeoutMs=5000
+com.acme.payment.GatewayTimeoutException: Timeout waiting for gateway response after 5000ms
+    at com.acme.payment.client.StripeGatewayClient.authorize(StripeGatewayClient.java:182)
+    at com.acme.payment.service.PaymentAuthorizationService.authorize(PaymentAuthorizationService.java:91)
+    at com.acme.order.workflow.CheckoutWorkflow.executePayment(CheckoutWorkflow.java:247)
+    at com.acme.order.workflow.CheckoutWorkflow.processOrder(CheckoutWorkflow.java:133)
+    at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+    at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+    at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+2026-02-10T07:18:23.047Z WARN  [order-service] [traceId=2f9c9a4f3e5743c4] [userId=usr_104882] [ip=203.0.113.42] Checkout rolled back orderId=ord_7894201 reason=PAYMENT_GATEWAY_TIMEOUT
+2026-02-10T07:22:10.558Z INFO  [auth-service] [traceId=ee14f78acdca43bc] [userId=usr_998112] [ip=198.51.100.17] Login attempt email=jane.doe@enterprise-retail.com
+2026-02-10T07:22:10.901Z ERROR [auth-service] [traceId=ee14f78acdca43bc] [userId=usr_998112] [ip=198.51.100.17] Failed authentication reason=INVALID_PASSWORD lockoutAttempts=4
+org.springframework.security.authentication.BadCredentialsException: Bad credentials
+    at org.springframework.security.authentication.dao.AbstractUserDetailsAuthenticationProvider.authenticate(AbstractUserDetailsAuthenticationProvider.java:142)
+    at org.springframework.security.authentication.ProviderManager.authenticate(ProviderManager.java:182)
+    at com.acme.auth.service.LoginService.authenticate(LoginService.java:74)
+    at com.acme.auth.controller.AuthController.login(AuthController.java:58)
+2026-02-10T07:30:55.018Z INFO  [catalog-service] [traceId=67d4ca6a9bf04a1b] [userId=usr_452701] [ip=192.0.2.81] Search request query="wireless mechanical keyboard" page=1 size=20
+2026-02-10T07:30:55.473Z INFO  [catalog-service] [traceId=67d4ca6a9bf04a1b] [userId=usr_452701] [ip=192.0.2.81] Search response totalHits=184 latencyMs=455
