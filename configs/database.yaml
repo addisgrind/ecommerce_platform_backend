@@ -1,0 +1,46 @@
+database:
+  primary:
+    engine: postgresql
+    host: db-primary.prod.internal
+    port: 5432
+    name: ecommerce_prod
+    username: app_user
+    pool:
+      max_connections: 80
+      min_connections: 20
+      idle_timeout_seconds: 120
+      max_lifetime_seconds: 1800
+    ssl:
+      enabled: true
+      mode: verify-full
+      ca_cert_path: /etc/ssl/certs/prod-ca.pem
+      client_cert_path: /etc/ssl/certs/ecommerce-backend.pem
+      client_key_path: /etc/ssl/private/ecommerce-backend.key
+
+  replica:
+    engine: postgresql
+    hosts:
+      - db-replica-01.prod.internal:5432
+      - db-replica-02.prod.internal:5432
+    username: app_readonly
+    load_balance: round_robin
+    pool:
+      max_connections: 120
+      min_connections: 30
+      idle_timeout_seconds: 90
+
+migrations:
+  table: schema_migrations
+  lock_timeout_ms: 10000
+  statement_timeout_ms: 45000
+
+observability:
+  slow_query_threshold_ms: 250
+  log_lock_waits: true
+  deadlock_alert_channel: pagerduty
+
+backup:
+  enabled: true
+  schedule_cron: "0 */6 * * *"
+  retention_days: 14
+  s3_bucket: s3://enterprise-retail-prod-db-backups/ecommerce

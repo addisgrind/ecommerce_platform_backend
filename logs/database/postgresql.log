@@ -1,0 +1,12 @@
+2026-02-10 07:17:58.402 UTC [3312] LOG:  starting PostgreSQL 15.6 on x86_64-pc-linux-gnu, compiled by gcc (GCC) 12.3.1 20231205, 64-bit
+2026-02-10 07:17:58.402 UTC [3312] LOG:  listening on IPv4 address "0.0.0.0", port 5432
+2026-02-10 07:17:58.410 UTC [3312] LOG:  database system is ready to accept connections
+2026-02-10 07:18:22.775 UTC [3481] app_user@ecommerce_prod LOG:  duration: 29.110 ms  statement: SELECT id, stock, reserved FROM inventory WHERE sku = 'KB-MECH-87-BLACK' FOR UPDATE
+2026-02-10 07:18:23.049 UTC [3481] app_user@ecommerce_prod ERROR:  deadlock detected
+2026-02-10 07:18:23.049 UTC [3481] app_user@ecommerce_prod DETAIL:  Process 3481 waits for ShareLock on transaction 817234; blocked by process 3494.
+	Process 3494 waits for ShareLock on transaction 817233; blocked by process 3481.
+	Process 3481: UPDATE orders SET status = 'PAYMENT_FAILED', updated_at = NOW() WHERE id = 'ord_7894201';
+	Process 3494: UPDATE order_events SET event_status = 'SENT' WHERE order_id = 'ord_7894201' AND event_type = 'PAYMENT';
+2026-02-10 07:18:23.049 UTC [3481] app_user@ecommerce_prod HINT:  See server log for query details.
+2026-02-10 07:18:23.049 UTC [3481] app_user@ecommerce_prod STATEMENT:  UPDATE orders SET status = 'PAYMENT_FAILED', updated_at = NOW() WHERE id = 'ord_7894201';
+2026-02-10 07:30:55.471 UTC [3598] app_readonly@ecommerce_prod LOG:  duration: 421.006 ms  statement: SELECT * FROM search_products('wireless mechanical keyboard', 1, 20);
